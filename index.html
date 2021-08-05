@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://unpkg.com/tailwindcss@^2.0/dist/tailwind.min.css">
+    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.js" defer></script>
+
+    <style>
+        [x-cloak] {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- определили, что x-data = app() -->
+        <div x-data="app()" x-cloak>
+            <div class="max-w-3xl mx-auto px-4 py-10">
+                <!-- у нас два состаяния возможных на финише 1-добежал пользователь но конца 2-не добежал -->
+
+                <!-- если добежал  -->
+                <div x-show.transition="step === 'complete'">
+                    <div class="bg-white rounded-lg p-10 flex items-center shadow justify-between">
+                        <div>
+                            <svg class="mb-4 h-20 w-20 text-green-500 mx-auto" viewBox="0 0 20 20" fill="currentColor">  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+    
+                            <h2 class="text-2xl mb-4 text-gray-800 text-center font-bold">Заявка создана ! Ожидайте специалиста!</h2>
+    
+                            <div class="text-gray-600 mb-8">
+                                <p class="text-2xl font-bold"> НОМЕР ТЕРМИНАЛА :
+                                    <span x-text="terminalNum" class=""></span>
+                                </p>
+                                <p class="text-2xl font-bold"> ID ТЕРМИНАЛА :
+                                    <span x-text="terminalID" class=""></span>
+                                </p>
+                                <p class="text-2xl font-bold"> ID ТЕРМИНАЛА :
+                                    <span x-text="status" class=""></span>
+                                </p>
+                                <p class="">
+                                    <span x-text="terminalID" class=""></span> <span x-text="terminalNum" class=""></span>
+                                </p>
+                            </div>
+    
+                            <button
+                                @click="step = 1"
+                                class="w-40 block mx-auto focus:outline-none py-2 px-5 rounded-lg shadow-sm text-center text-gray-600 bg-white hover:bg-gray-100 font-medium border" 
+                            >В начало</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- /если добежал  -->
+
+                <!-- если НЕ добежал  -  еще бежит :Ъ-->
+                <!--   -->
+                <div x-show.transition="step != 'complete'">	
+                    <!-- если пользователь в процессе заполнения , тогда предоставим ему 
+                    ВЕРХНЮЮ НАВИГАЦИЮ
+                    КОНТЕНТ КОНКРЕТНОГО ШАГА
+                    НИЖНЯЯ НАВИГАЦИЯ
+                    -->
+
+                    <!-- ВЕРХНЯЯ НАВИГАЦИЯ-->
+                    <div class="border-b-2 py-4">
+                        <div class="uppercase tracking-wide text-xs font-bold text-gray-500 mb-1 leading-tight" 
+                             x-text="`Шаг : ${step} из 3`">
+                            </div>
+                        <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+                            <div class="flex-1">
+                                <div x-show="step === 1">
+                                    <div class="text-lg font-bold text-gray-700 leading-tight">Идентификация  ввод номера терминала</div>
+                                </div>
+                                
+                                <div x-show="step === 2">
+                                    <div class="text-lg font-bold text-gray-700 leading-tight">Идентификация  ввод ID терминала</div>
+                                </div>
+    
+                                <div x-show="step === 3">
+                                    <div class="text-lg font-bold text-gray-700 leading-tight">Заявка на ремонт</div>
+                                </div>
+                            </div>
+    
+                            <div class="flex items-center md:w-64">
+                                <div class="w-full bg-white rounded-full mr-2">
+                                    <div class="rounded-full bg-green-500 text-xs leading-none h-2 text-center text-white" :style="'width: '+ parseInt(step / 3 * 100) +'%'"></div>
+                                </div>
+                                <div class="text-xs w-10 text-gray-600" x-text="parseInt(step / 3 * 100) +'%'"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /ВЕРХНЯЯ НАВИГАЦИЯ -->
+    
+                    <!-- КОНТЕНТ КОНКРЕТНОГО ШАГА -->
+                    <div class="py-10">	
+                        <div x-show.transition.in="step === 1">
+                            <div class="mb-5">
+                                <label for="terminalNum" 
+                                       class="font-bold mb-1 text-gray-700 block">
+                                    Номер терминала
+                                </label>
+                                <input type="number"
+                                    class="w-full px-4 py-3 rounded-lg shadow-sm focus:outline-none focus:shadow-outline text-gray-600 font-medium"
+                                    placeholder="Ведите номер терминала"
+                                    x-model="terminalNum">
+                            </div>
+    
+                            
+                        </div>
+                        <div x-show.transition.in="step === 2">
+
+     <div class="mb-5">
+        <label for="terminalID" 
+               class="font-bold mb-1 text-gray-700 block">
+            ID терминала
+        </label>
+        <input type="text"
+            class="w-full px-4 py-3 rounded-lg shadow-sm focus:outline-none focus:shadow-outline text-gray-600 font-medium"
+            placeholder="Введите ID терминала "
+            x-model="terminalID">
+    </div>
+                        </div>
+                        <div x-show.transition.in="step === 3">
+                            <div class="mb-5">
+                                <label for="text" class="font-bold mb-1 text-gray-700 block">Заявка на ремонт</label>
+                                
+                                <div class="flex">
+                                    <label
+                                        class="flex justify-start items-center text-truncate rounded-lg bg-white pl-4 pr-6 py-3 shadow-sm mr-4">
+                                        <div class="text-teal-600 mr-3">
+                                            <input type="radio" x-model="status" value="OK" class="form-radio focus:outline-none focus:shadow-outline" />
+                                        </div>
+                                        <div class="select-none text-gray-700">ВСЕ ЗАРАБОТАЛО</div>
+                                    </label>
+    
+                                    <label
+                                        class="flex justify-start items-center text-truncate rounded-lg bg-white pl-4 pr-6 py-3 shadow-sm">
+                                        <div class="text-teal-600 mr-3">
+                                            <input type="radio" x-model="status" value="FUCK" class="form-radio focus:outline-none focus:shadow-outline" />
+                                        </div>
+                                        <div class="select-none text-gray-700">НЕ РАБОТАЕТ!</div>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- / КОНТЕНТ КОНКРЕТНОГО ШАГА -->
+                </div>
+            </div>
+    
+            <!-- НИЖНЯЯ НАВИГАЦИЯ -->	
+            <div class="fixed bottom-0 left-0 right-0 py-5 bg-white shadow-md" x-show="step != 'complete'">
+                <div class="max-w-3xl mx-auto px-4">
+                    <div class="flex justify-between">
+                        <div class="w-1/2">
+                            <button
+                                x-show="step > 1"
+                                @click="step--"
+                                class="w-32 focus:outline-none py-2 px-5 rounded-lg shadow-sm text-center text-gray-600 bg-white hover:bg-gray-100 font-medium border" 
+                            >Назад</button>
+                        </div>
+    
+                        <div class="w-1/2 text-right">
+                            <button
+                                x-show="step < 3"
+                                @click="step++"
+                                class="w-32 focus:outline-none border border-transparent py-2 px-5 rounded-lg shadow-sm text-center text-white bg-blue-500 hover:bg-blue-600 font-medium" 
+                            >Далее</button>
+    
+                            <button
+                                @click="step = 'complete'"
+                                x-show="step === 3"
+                                class="w-32 focus:outline-none border border-transparent py-2 px-5 rounded-lg shadow-sm text-center text-white bg-blue-500 hover:bg-blue-600 font-medium" 
+                            >Завершить</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- / НИЖНЯЯ НАВИГАЦИЯ -->	
+        </div>
+    
+        <script>
+            function app() {
+                return {
+                    step: 1, 
+                    status: '',
+                    terminalID: '',
+                    terminalNum: '',
+                    status: 'value',
+
+    
+                }
+            }
+        </script>
+
+
+</body>
+
+</html>
